@@ -1,5 +1,5 @@
 const keys = require('./keys');
-
+const { promisify } = require('util');
 // Express App Setup
 const express = require('express');
 const bodyParser = require('body-parser');
@@ -32,6 +32,7 @@ const redisClient = redis.createClient({
   retry_strategy: () => 1000
 });
 const redisPublisher = redisClient.duplicate();
+const hgetall = promisify(redisClient.hgetall).bind(redisClient);
 
 // Express route handlers
 
@@ -46,9 +47,11 @@ app.get('/values/all', async (req, res) => {
 });
 
 app.get('/values/current', async (req, res) => {
-  redisClient.hgetall('values', (err, values) => {
-    res.send(values);
-  });
+  const values = await hgetall('values');
+  res.send(values);
+  // redisClient.hgetall('values', (err, values) => {
+  //   res.send(values);
+  // });
 });
 
 app.post('/values', async (req, res) => {
