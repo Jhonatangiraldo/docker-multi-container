@@ -1,0 +1,26 @@
+sudo: required
+services:
+  - docker
+
+before_install:
+  - docker build -f ./client/Dockerfile.dev -t jhonatan/react-client ./client
+# here can be another images for test
+
+script:
+  - docker run -e CI=true jhonatan/react-client npm run test
+# here can run other test
+
+# building production images to be upload to docker hub
+# this may be called pre-deploy
+after_success:
+  - docker build -t jhonatan/multi-client ./client
+  - docker build -t jhonatan/nginx ./nginx
+  - docker build -t jhonatan/server ./server
+  - docker build -t jhonatan/worker ./worker
+  # Log in in the docker-cli
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+  # Take the images and push them to docker hub
+  - docker push jhonatan/multi-client
+  - docker push jhonatan/nginx
+  - docker push jhonatan/server
+  - docker push jhonatan/worker
