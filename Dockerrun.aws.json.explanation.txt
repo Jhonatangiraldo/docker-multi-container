@@ -12,3 +12,6 @@
   At least one container definition must be essential
 
 - For links, we don't provide the hostname but the name of the CD
+
+- Every docker container needs a specific amount of RAM to be allocated
+  We should put that amount in the memory field
