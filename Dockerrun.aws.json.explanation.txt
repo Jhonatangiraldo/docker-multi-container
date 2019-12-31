@@ -1,0 +1,14 @@
+- The name of every container definition doesn't need to be the same folder's name
+  We will use the same name to keep it easier.
+
+- Due to the nginx is the server, the container definitions hostnames must
+  match with the domains/serverNames that nginx has defined
+
+- The hostname is the name to be referenced by other container definitions
+  When the service won't be used by any other service, hostname doesn't need
+  to be added
+
+- Essential field is to stop everything if the container definition crashes
+  At least one container definition must be essential
+
+- For links, we don't provide the hostname but the name of the CD
